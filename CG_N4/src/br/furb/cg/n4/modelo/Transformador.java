@@ -95,7 +95,7 @@ public class Transformador
 			
 			matrizGlobal = matrizPontoFixo.transformMatrix(matrizGlobal);			
 			matrizGlobal = transformacao.transformMatrix(matrizGlobal);					
-			matrizGlobal = matrizInversa.transformMatrix(matrizGlobal);			
+			matrizGlobal = matrizInversa.transformMatrix(matrizGlobal);
 		}
 		else
 			matrizGlobal = transformacao.transformMatrix(matrizGlobal);

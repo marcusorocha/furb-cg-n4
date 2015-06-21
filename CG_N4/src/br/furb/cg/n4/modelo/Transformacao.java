@@ -33,6 +33,13 @@ public final class Transformacao
 	    matrix[13] = translationVector.getY();
 	    matrix[14] = translationVector.getZ();
 	}
+	
+	public void ClearTranslation()
+	{
+	    matrix[12] = 0.0;
+	    matrix[13] = 0.0;
+	    matrix[14] = 0.0;
+	}
 
 	public void MakeXRotation(double radians)
 	{

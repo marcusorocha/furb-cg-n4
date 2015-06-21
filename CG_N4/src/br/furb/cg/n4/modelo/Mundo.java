@@ -86,7 +86,7 @@ public class Mundo extends ObjetoGrafico
 		for (ObjetoGrafico o : listaObjetos)
 		{			
 			if (o.isSelecionavel())
-			{
+			{								
 				if (o.contemPonto(p))
 					return o;
 				

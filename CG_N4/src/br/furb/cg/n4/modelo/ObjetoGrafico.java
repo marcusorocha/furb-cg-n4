@@ -65,6 +65,16 @@ public abstract class ObjetoGrafico
 		transformador.transladar(x, y);
 	}
 	
+	public void transladar(Ponto p)
+	{
+		transladar(p.getX(), p.getY());
+	}
+	
+	public void limparTranslacao()
+	{
+		matrizObjeto.ClearTranslation();
+	}
+	
 	public void rotacionar(double graus)
 	{		
 		transformador.rotacionar(graus);
@@ -92,17 +102,4 @@ public abstract class ObjetoGrafico
 	{
 		this.selecionado = selecionado;
 	}
-	
-	/*
-	public boolean contemPonto(Ponto p)
-	{
-		if (!bbox.isPontoDentro(p))
-			return false;
-		
-		if (getVerticeDePonto(p) != null)
-			return true;
-		
-		return FuncoesGeometricas.pontoEmPoligono(vertices, p);		
-	}
-	*/
 }

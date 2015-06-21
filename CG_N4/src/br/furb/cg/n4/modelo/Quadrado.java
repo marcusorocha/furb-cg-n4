@@ -29,5 +29,11 @@ public class Quadrado extends Forma
 	{
 		return vertices;
 	}
+
+	@Override
+	FormaType getTipoForma()
+	{
+		return FormaType.QUADRADO;
+	}
 	
 }

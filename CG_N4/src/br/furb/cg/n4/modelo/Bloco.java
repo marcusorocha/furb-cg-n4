@@ -12,14 +12,29 @@ public class Bloco extends ObjetoGrafico
 	
 	private Forma forma;
 	
+	double yMin;
+	double yMax;
+	double xMin;
+	double xMax;
+	
 	public Bloco(Forma forma)
 	{
 		this.forma = forma;
+				
+		yMin = -10;
+		yMax = +10;
+		xMin = -10;
+		xMax = +10;
 	}
 	
 	public Bloco(FormaType tipo)
 	{
-		this.forma = FormaFactory.criarForma(tipo);
+		this(FormaFactory.criarForma(tipo));		
+	}
+	
+	public FormaType getTipoForma()
+	{
+		return forma.getTipoForma();
 	}
 	
 	@Override
@@ -43,8 +58,13 @@ public class Bloco extends ObjetoGrafico
 
 	@Override
 	boolean contemPonto(Ponto p)
-	{
-		return false;
-	}	
-
+	{		
+		Ponto pMin = getMatrizObjeto().transformPoint(new Ponto(xMin, yMin));
+		Ponto pMax = getMatrizObjeto().transformPoint(new Ponto(xMax, yMax));
+		
+		return (p.getX() > pMin.getX()) && 
+			   (p.getX() < pMax.getX()) && 
+			   (p.getY() > pMin.getY()) && 
+			   (p.getY() < pMax.getY());
+	}
 }

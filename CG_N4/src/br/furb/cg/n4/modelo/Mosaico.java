@@ -87,5 +87,20 @@ public class Mosaico extends ObjetoGrafico
 	{
 		return false;
 	}
+	
+	public Bloco obtemBlocoDePonto(Ponto p)
+	{
+		for (int h = 0; h < BLOCOS_H; h++)
+		{
+			for (int v = 0; v < BLOCOS_V; v++)
+			{		
+				Bloco b = blocos[h][v];
+				
+				if (b.contemPonto(p)) return b;
+			}
+		}
+		
+		return null;
+	}
 
 }

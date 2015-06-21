@@ -15,6 +15,8 @@ import br.furb.cg.n4.modelo.Mosaico;
 import br.furb.cg.n4.modelo.Mundo;
 import br.furb.cg.n4.modelo.ObjetoGrafico;
 import br.furb.cg.n4.modelo.Operacao;
+import br.furb.cg.n4.modelo.Peca;
+import br.furb.cg.n4.modelo.PecaDupla;
 import br.furb.cg.n4.modelo.PecaTripla;
 import br.furb.cg.n4.modelo.Ponto;
 import br.furb.cg.n4.utils.EventosAdapter;
@@ -26,6 +28,7 @@ public class AmbienteGrafico extends EventosAdapter
 	private GLAutoDrawable glDrawable;
 
 	private Mundo mundo;
+	private Mosaico mosaico;
 	private ObjetoGrafico selecionado;
 	
 	public AmbienteGrafico(Component owner)
@@ -42,9 +45,12 @@ public class AmbienteGrafico extends EventosAdapter
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
 		mundo = new Mundo();
-		mundo.getObjetos().add(new Mosaico());
+		mosaico = new Mosaico();
 		
-		mundo.getObjetos().add(new PecaTripla(FormaType.CRUZ, FormaType.QUADRADO, FormaType.CIRCULO));
+		mundo.getObjetos().add(mosaico);
+		
+		mundo.getObjetos().add(new PecaTripla(FormaType.CRUZ, FormaType.CIRCULO, FormaType.QUADRADO));
+		mundo.getObjetos().add(new PecaDupla(FormaType.CRUZ, FormaType.QUADRADO));
 	}
 
 	public void display(GLAutoDrawable arg0)
@@ -89,10 +95,7 @@ public class AmbienteGrafico extends EventosAdapter
 		selecionado = selecao;
 		
 		if (selecionado != null)
-		{
 			selecionado.setSelecionado(true);
-			//selecionado.pressionouMouse(p);
-		}
 		
 		redesenhar();
 	}
@@ -103,6 +106,16 @@ public class AmbienteGrafico extends EventosAdapter
 		if (selecionado != null)
 		{
 			//selecionado.liberouMouse(getPontoDeEventoMouse(e));
+			
+			if (selecionado instanceof Peca)
+			{
+				boolean encaixa = ((Peca)selecionado).verificaEncaixe(mosaico);
+				if (encaixa)
+				{
+					((Peca)selecionado).encaixar(mosaico);
+				}
+			}
+			
 			redesenhar();
 		}
 	}
@@ -111,8 +124,21 @@ public class AmbienteGrafico extends EventosAdapter
 	public void mouseDragged(MouseEvent e)
 	{
 		if (selecionado != null)
-		{
+		{	
+			Ponto p = getPontoDeEventoMouse(e);
+			
 			//selecionado.arrastouMouse(getPontoDeEventoMouse(e));
+			
+			selecionado.limparTranslacao();
+			selecionado.transladar(p.getX(), p.getY());
+			
+			if (selecionado instanceof Peca)
+			{
+				//boolean encaixa = ((Peca)selecionado).verificaEncaixe(mosaico);
+				//if (encaixa)	
+				//	System.out.println("Encaixa !");
+			}
+			
 			redesenhar();
 		}
 	}

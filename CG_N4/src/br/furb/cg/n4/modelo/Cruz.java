@@ -48,4 +48,10 @@ public class Cruz extends Forma
 	{		
 		return vertices;
 	}
+
+	@Override
+	FormaType getTipoForma()
+	{
+		return FormaType.CRUZ;
+	}
 }

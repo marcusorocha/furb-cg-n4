@@ -55,4 +55,10 @@ public class Circulo extends Forma
 		return new Ponto(x, y);
 	}
 
+	@Override
+	FormaType getTipoForma()
+	{
+		return FormaType.CIRCULO;
+	}
+
 }
