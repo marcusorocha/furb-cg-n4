@@ -9,6 +9,7 @@ import javax.media.opengl.DebugGL;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
+import javax.swing.JOptionPane;
 
 import br.furb.cg.n4.modelo.Mosaico;
 import br.furb.cg.n4.modelo.Mundo;
@@ -46,6 +47,13 @@ public class AmbienteGrafico extends EventosAdapter
 		
 		mundo = new Mundo();
 		
+		iniciarJogo();
+	}
+	
+	private void iniciarJogo()
+	{
+		mundo.getObjetos().clear();
+		
 		mosaico = new Mosaico(Combinacoes.getMosaico(0));
 		
 		mundo.getObjetos().add(mosaico);
@@ -80,8 +88,6 @@ public class AmbienteGrafico extends EventosAdapter
 	public void mousePressed(MouseEvent e)
 	{	
 		Ponto p = getPontoDeEventoMouse(e);
-		
-		mundo.getCamera().exibirOrthos();
 		
 		ObjetoGrafico selecao = mundo.localizarObjeto(p);
 		
@@ -125,9 +131,16 @@ public class AmbienteGrafico extends EventosAdapter
 						girarSelecionado = false;
 					}
 				}
+				
+				redesenhar();
+				
+				if (mosaico.todosBlocosEstaoOcupados())
+				{
+					JOptionPane.showMessageDialog(null, "Fim de jogo");
+					iniciarJogo();
+					redesenhar();
+				}
 			}
-			
-			redesenhar();
 		}
 	}
 	

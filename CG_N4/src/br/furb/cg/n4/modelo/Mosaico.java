@@ -98,5 +98,15 @@ public class Mosaico extends ObjetoGrafico
 		
 		return null;
 	}
+	
+	public boolean todosBlocosEstaoOcupados()
+	{
+		for (int h = 0; h < BLOCOS_H; h++)
+			for (int v = 0; v < BLOCOS_V; v++)
+				if (!blocos[h][v].isOcupado())
+					return false;
+		
+		return true;
+	}
 
 }
