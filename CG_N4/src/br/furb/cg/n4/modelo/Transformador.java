@@ -5,9 +5,16 @@ public class Transformador
 {
 	private ObjetoGrafico objeto;
 	
+	private Transformacao escala;
+	private Transformacao rotacao;
+	private Transformacao translacao;
+	
 	public Transformador(ObjetoGrafico objeto)
 	{
 		this.objeto = objeto;
+		this.escala = new Transformacao();
+		this.rotacao = new Transformacao();
+		this.translacao = new Transformacao();
 	}
 	
 	/**
@@ -23,11 +30,13 @@ public class Transformador
 		double Sx = proporcao;
 		double Sy = proporcao;
 		
-		Transformacao escala = new Transformacao();
+		Transformacao escalaAux = new Transformacao();
 		
-		escala.MakeScale(Sx, Sy, 1.0);
+		escalaAux.MakeScale(Sx, Sy, 1.0);
 		
-		aplicarTransformacao(escala, true);
+		escala = escala.transformMatrix(escalaAux);			
+		
+		aplicarTransformacao();
 	}
 	
 	/**
@@ -37,13 +46,23 @@ public class Transformador
 	 * @param x Valor para translação no eixo X
 	 * @param y Valor para translação no eixo Y
 	 */
-	public void transladar(double x, double y)
+	public void transladar(double x, double y, boolean absoluto)
 	{	
-		Transformacao translacao = new Transformacao();
+		Transformacao translacaoAux = new Transformacao();
 		
-		translacao.MakeTranslation(new Ponto(x, y));
+		translacaoAux.MakeTranslation(new Ponto(x, y));
 		
-		aplicarTransformacao(translacao, false);
+		if (absoluto)
+			translacao = translacaoAux;
+		else
+			translacao = translacao.transformMatrix(translacaoAux);
+		
+		aplicarTransformacao();
+	}
+	
+	public void transladar(double x, double y)
+	{
+		transladar(x, y, false);
 	}
 	
 	/**
@@ -60,11 +79,13 @@ public class Transformador
 	 */
 	public void rotacionar(double graus)
 	{		
-		Transformacao rotacao = new Transformacao();
+		Transformacao rotacaoAux = new Transformacao();
 		
-		rotacao.MakeZRotation(Transformacao.RAS_DEG_TO_RAD * graus);
+		rotacaoAux.MakeZRotation(Transformacao.RAS_DEG_TO_RAD * graus);
 		
-		aplicarTransformacao(rotacao, true);
+		rotacao = rotacao.transformMatrix(rotacaoAux);
+		
+		aplicarTransformacao();
 	}
 	
 	/**
@@ -78,31 +99,23 @@ public class Transformador
 	 * 		com relação ao centro do objeto ou com
 	 * 		relação ao centro do ambiente gráfico.
 	 */
-	private void aplicarTransformacao(Transformacao transformacao, boolean usaPontoFixo)
+	private void aplicarTransformacao()
 	{
 		Transformacao matrizGlobal = new Transformacao();
 
-		if (usaPontoFixo)
-		{
-			Ponto pMedio = objeto.getBbox().getPontoMedio();
-			Ponto pFixo = new Ponto(-pMedio.getX(), -pMedio.getY());
-			
-			Transformacao matrizPontoFixo = new Transformacao();
-			Transformacao matrizInversa = new Transformacao();
-			
-			matrizPontoFixo.MakeTranslation(pFixo);
-			matrizInversa.MakeTranslation(pMedio);
-			
-			matrizGlobal = matrizPontoFixo.transformMatrix(matrizGlobal);			
-			matrizGlobal = transformacao.transformMatrix(matrizGlobal);					
-			matrizGlobal = matrizInversa.transformMatrix(matrizGlobal);
-		}
-		else
-			matrizGlobal = transformacao.transformMatrix(matrizGlobal);
+		Ponto pMedio = objeto.getBbox().getPontoMedio();
+		Ponto pFixo = new Ponto(-pMedio.getX(), -pMedio.getY());
 		
-		Transformacao matrizObjeto = objeto.getMatrizObjeto();		
-		Transformacao matrizAuxiliar = matrizObjeto.transformMatrix(matrizGlobal);
+		Transformacao matrizPontoFixo = new Transformacao();
+			
+		matrizPontoFixo.MakeTranslation(pFixo);		
+			
+		matrizGlobal = matrizPontoFixo.transformMatrix(matrizGlobal);					
+		matrizGlobal = escala.transformMatrix(matrizGlobal);
+		matrizGlobal = rotacao.transformMatrix(matrizGlobal);		
+		matrizGlobal = translacao.transformMatrix(matrizGlobal);
 		
-		matrizObjeto.setData(matrizAuxiliar.getData());
+		objeto.getMatrizObjeto().setData(matrizGlobal.getData());
 	}
+
 }

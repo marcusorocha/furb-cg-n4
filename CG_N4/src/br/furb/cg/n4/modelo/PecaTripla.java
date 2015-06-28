@@ -6,9 +6,12 @@ import java.util.List;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
+import br.furb.cg.n4.utils.FuncoesGeometricas;
+
 public class PecaTripla extends Peca
 {
 	private List<Ponto> borda;
+	private BlocoMosaico[] blocosEncaixados;
 	
 	private Bloco b1;
 	private Bloco b2;
@@ -25,6 +28,8 @@ public class PecaTripla extends Peca
 	
 	public PecaTripla(FormaType fb1, FormaType fb2, FormaType fb3)
 	{
+		blocosEncaixados = new BlocoMosaico[3];
+		
 		criarBorda();
 		criarBlocos(fb1, fb2, fb3);
 	}
@@ -93,32 +98,43 @@ public class PecaTripla extends Peca
 	@Override
 	boolean contemPonto(Ponto p)
 	{
-		Ponto pMin = getMatrizObjeto().transformPoint(new Ponto(xMin, yMin));
-		Ponto pMax = getMatrizObjeto().transformPoint(new Ponto(xMax, yMax));
+		List<Ponto> vertices = new ArrayList<Ponto>();
 		
-		return (p.getX() > pMin.getX()) && 
-			   (p.getX() < pMax.getX()) && 
-			   (p.getY() > pMin.getY()) && 
-			   (p.getY() < pMax.getY());
+		for (Ponto b : borda)
+			vertices.add(getMatrizObjeto().transformPoint(b));
+		
+		return FuncoesGeometricas.pontoEmPoligono(vertices, p);
+	}
+	
+	private BlocoMosaico[] obtemBlocosEcaixe(Mosaico mosaico)
+	{
+		BlocoMosaico[] blocos = new BlocoMosaico[3];
+		
+		Ponto pa1 = getMatrizObjeto().transformPoint(pb1);
+		blocos[0] = mosaico.obtemBlocoDePonto(pa1);
+		
+		Ponto pa2 = getMatrizObjeto().transformPoint(pb2);		
+		blocos[1] = mosaico.obtemBlocoDePonto(pa2);
+		
+		Ponto pa3 = getMatrizObjeto().transformPoint(pb3);		
+		blocos[2] = mosaico.obtemBlocoDePonto(pa3);
+		
+		return blocos;
 	}
 
 	@Override
 	public boolean verificaEncaixe(Mosaico mosaico)
 	{
-		Ponto pa1 = getMatrizObjeto().transformPoint(pb1);
-		Bloco bm1 = mosaico.obtemBlocoDePonto(pa1);
+		BlocoMosaico[] blocos = obtemBlocosEcaixe(mosaico);
 		
-		Ponto pa2 = getMatrizObjeto().transformPoint(pb2);		
-		Bloco bm2 = mosaico.obtemBlocoDePonto(pa2);
-		
-		Ponto pa3 = getMatrizObjeto().transformPoint(pb3);		
-		Bloco bm3 = mosaico.obtemBlocoDePonto(pa3);
-		
-		if (bm1 != null && bm2 != null && bm3 != null)
+		if (blocos[0] != null && blocos[1] != null && blocos[2] != null)
 		{
-			return bm1.getTipoForma() == b1.getTipoForma() &&
-				   bm2.getTipoForma() == b2.getTipoForma() &&
-				   bm3.getTipoForma() == b3.getTipoForma();
+			return !blocos[0].isOcupado() &&
+				   !blocos[1].isOcupado() &&
+				   !blocos[2].isOcupado() &&
+				    blocos[0].getTipoForma() == b1.getTipoForma() &&
+				    blocos[1].getTipoForma() == b2.getTipoForma() &&
+				    blocos[2].getTipoForma() == b3.getTipoForma();
 		}
 				
 		return false;
@@ -127,19 +143,38 @@ public class PecaTripla extends Peca
 	@Override
 	public void encaixar(Mosaico mosaico)
 	{
-		Ponto pa2 = getMatrizObjeto().transformPoint(pb2);
-		Bloco bm2 = mosaico.obtemBlocoDePonto(pa2);
+		BlocoMosaico[] blocos = obtemBlocosEcaixe(mosaico);
 		
-		if (bm2 != null)
+		if (blocos[0] != null && blocos[1] != null && blocos[2] != null)
 		{			
-			Ponto pEncaixe = bm2.getMatrizObjeto().transformPoint(new Ponto(0, 0));
+			Ponto pb0 = blocos[0].getMatrizObjeto().transformPoint(new Ponto(0, 0));
+			Ponto pb2 = blocos[2].getMatrizObjeto().transformPoint(new Ponto(0, 0));
 			
-			pEncaixe.setX(pEncaixe.getX() - 20);
-			pEncaixe.setY(pEncaixe.getY() - 20);
+			double x = (pb0.getX() + pb2.getX()) / 2;
+			double y = (pb0.getY() + pb2.getY()) / 2;
 			
-			limparTranslacao();
-			transladar(pEncaixe);
+			Ponto pEncaixe = new Ponto(x, y);			
+			
+			transladar(pEncaixe, true);
+			
+			blocos[0].setOcupado(true);
+			blocos[1].setOcupado(true);
+			blocos[2].setOcupado(true);
+			
+			blocosEncaixados = blocos;
 		}
 	}
 	
+	@Override
+	public void desencaixar(Mosaico mosaico)
+	{
+		for (int i = 0; i < blocosEncaixados.length; i++)
+		{
+			if (blocosEncaixados[i] != null)
+			{		
+				blocosEncaixados[i].setOcupado(false);
+				blocosEncaixados[i] = null;
+			}
+		}
+	}
 }

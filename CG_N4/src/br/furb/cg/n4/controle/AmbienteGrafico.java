@@ -10,15 +10,13 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 
-import br.furb.cg.n4.modelo.FormaType;
 import br.furb.cg.n4.modelo.Mosaico;
 import br.furb.cg.n4.modelo.Mundo;
 import br.furb.cg.n4.modelo.ObjetoGrafico;
 import br.furb.cg.n4.modelo.Operacao;
 import br.furb.cg.n4.modelo.Peca;
-import br.furb.cg.n4.modelo.PecaDupla;
-import br.furb.cg.n4.modelo.PecaTripla;
 import br.furb.cg.n4.modelo.Ponto;
+import br.furb.cg.n4.utils.Combinacoes;
 import br.furb.cg.n4.utils.EventosAdapter;
 
 public class AmbienteGrafico extends EventosAdapter
@@ -30,6 +28,8 @@ public class AmbienteGrafico extends EventosAdapter
 	private Mundo mundo;
 	private Mosaico mosaico;
 	private ObjetoGrafico selecionado;
+	private Ponto pontoSelecao;
+	private boolean girarSelecionado = false;
 	
 	public AmbienteGrafico(Component owner)
 	{
@@ -45,12 +45,11 @@ public class AmbienteGrafico extends EventosAdapter
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
 		mundo = new Mundo();
-		mosaico = new Mosaico();
+		
+		mosaico = new Mosaico(Combinacoes.getMosaico(0));
 		
 		mundo.getObjetos().add(mosaico);
-		
-		mundo.getObjetos().add(new PecaTripla(FormaType.CRUZ, FormaType.CIRCULO, FormaType.QUADRADO));
-		mundo.getObjetos().add(new PecaDupla(FormaType.CRUZ, FormaType.QUADRADO));
+		mundo.getObjetos().addAll(Combinacoes.getPecas());
 	}
 
 	public void display(GLAutoDrawable arg0)
@@ -82,8 +81,6 @@ public class AmbienteGrafico extends EventosAdapter
 	{	
 		Ponto p = getPontoDeEventoMouse(e);
 		
-		p.exibirCoordenadas();
-		
 		mundo.getCamera().exibirOrthos();
 		
 		ObjetoGrafico selecao = mundo.localizarObjeto(p);
@@ -91,11 +88,17 @@ public class AmbienteGrafico extends EventosAdapter
 		if (selecionado != null)
 			if (!selecionado.equals(selecao))
 				selecionado.setSelecionado(false);
+				
+		girarSelecionado = (selecao != null && selecao == selecionado);
 		
 		selecionado = selecao;
 		
 		if (selecionado != null)
+		{			
 			selecionado.setSelecionado(true);
+			pontoSelecao = p;
+			
+		}
 		
 		redesenhar();
 	}
@@ -105,14 +108,22 @@ public class AmbienteGrafico extends EventosAdapter
 	{
 		if (selecionado != null)
 		{
-			//selecionado.liberouMouse(getPontoDeEventoMouse(e));
-			
 			if (selecionado instanceof Peca)
 			{
 				boolean encaixa = ((Peca)selecionado).verificaEncaixe(mosaico);
+				
 				if (encaixa)
 				{
 					((Peca)selecionado).encaixar(mosaico);
+				}
+				else
+				{
+					if (girarSelecionado)
+					{
+						selecionado.rotacionar(90);
+						
+						girarSelecionado = false;
+					}
 				}
 			}
 			
@@ -125,18 +136,20 @@ public class AmbienteGrafico extends EventosAdapter
 	{
 		if (selecionado != null)
 		{	
+			girarSelecionado = false;
+			
 			Ponto p = getPontoDeEventoMouse(e);
 			
-			//selecionado.arrastouMouse(getPontoDeEventoMouse(e));
+			double translacaoX = p.getX() - pontoSelecao.getX();
+			double translacaoY = p.getY() - pontoSelecao.getY();
 			
-			selecionado.limparTranslacao();
-			selecionado.transladar(p.getX(), p.getY());
+			selecionado.transladar(translacaoX, translacaoY);
+			
+			pontoSelecao = p;
 			
 			if (selecionado instanceof Peca)
 			{
-				//boolean encaixa = ((Peca)selecionado).verificaEncaixe(mosaico);
-				//if (encaixa)	
-				//	System.out.println("Encaixa !");
+				((Peca) selecionado).desencaixar(mosaico);
 			}
 			
 			redesenhar();

@@ -65,14 +65,19 @@ public abstract class ObjetoGrafico
 		transformador.transladar(x, y);
 	}
 	
+	public void transladar(double x, double y, boolean absoluto)
+	{
+		transformador.transladar(x, y, absoluto);
+	}
+	
 	public void transladar(Ponto p)
 	{
 		transladar(p.getX(), p.getY());
 	}
 	
-	public void limparTranslacao()
+	public void transladar(Ponto p, boolean absoluto)
 	{
-		matrizObjeto.ClearTranslation();
+		transladar(p.getX(), p.getY(), absoluto);
 	}
 	
 	public void rotacionar(double graus)

@@ -8,6 +8,7 @@ import br.furb.cg.n4.modelo.Mosaico;
 import br.furb.cg.n4.modelo.Peca;
 import br.furb.cg.n4.modelo.PecaDupla;
 import br.furb.cg.n4.modelo.PecaTripla;
+import br.furb.cg.n4.modelo.Ponto;
 
 public class Combinacoes
 {
@@ -91,6 +92,25 @@ public class Combinacoes
 		 * T O + T + + O
 		 */
 		
+		espalharPecas(pecas);
+		
 		return pecas;
+	}
+	
+	public static void espalharPecas(List<Peca> pecas)
+	{
+		double raio = 180; // Número mágico 
+		
+		Ponto centro = new Ponto(0, 0);
+		
+		List<Ponto> posicoes = FuncoesGeometricas.gerarCirculoDePontos(centro, raio, pecas.size());
+		
+		for (int i = 0; i < pecas.size(); i++)
+		{
+			Peca peca = pecas.get(i);
+			Ponto posicao = posicoes.get(i);
+			
+			peca.transladar(posicao);
+		}
 	}
 }

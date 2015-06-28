@@ -6,22 +6,20 @@ import java.util.List;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
-import br.furb.cg.n4.utils.Combinacoes;
-
 public class Mosaico extends ObjetoGrafico
 {
 	public static final int BLOCOS_V = 4;
 	public static final int BLOCOS_H = 7;
 	
 	private List<Ponto> borda;
-	private Bloco[][] blocos;
+	private BlocoMosaico[][] blocos;
 	
 	double xMin, xMax, yMin, yMax;
 	
-	public Mosaico()
-	{
+	public Mosaico(int[][] formas)
+	{		
 		criarBorda();
-		criarBlocos();
+		criarBlocos(formas);
 	}
 	
 	private void criarBorda()
@@ -38,11 +36,9 @@ public class Mosaico extends ObjetoGrafico
 		borda.add(new Ponto(xMax, yMin));
 	}
 	
-	private void criarBlocos()
-	{
-		blocos = new Bloco[BLOCOS_H][BLOCOS_V];
-		
-		int[][] formas = Combinacoes.getMosaico(0);
+	private void criarBlocos(int[][] formas)
+	{		
+		blocos = new BlocoMosaico[BLOCOS_H][BLOCOS_V];		
 		
 		for (int h = 0; h < BLOCOS_H; h++)
 		{
@@ -51,7 +47,7 @@ public class Mosaico extends ObjetoGrafico
 				double xPosBloco = ((Bloco.TAMANHO * h) + (Bloco.TAMANHO / 2)) + xMin;
 				double yPosBloco = ((Bloco.TAMANHO * v) + (Bloco.TAMANHO / 2)) + yMin;
 				
-				Bloco b = new Bloco(FormaFactory.criarForma(FormaType.values()[formas[h][v]]));
+				BlocoMosaico b = new BlocoMosaico(FormaFactory.criarForma(FormaType.values()[formas[h][v]]));
 				
 				b.transladar(xPosBloco, yPosBloco);
 				b.escalar(2);
@@ -88,13 +84,13 @@ public class Mosaico extends ObjetoGrafico
 		return false;
 	}
 	
-	public Bloco obtemBlocoDePonto(Ponto p)
+	public BlocoMosaico obtemBlocoDePonto(Ponto p)
 	{
 		for (int h = 0; h < BLOCOS_H; h++)
 		{
 			for (int v = 0; v < BLOCOS_V; v++)
 			{		
-				Bloco b = blocos[h][v];
+				BlocoMosaico b = blocos[h][v];
 				
 				if (b.contemPonto(p)) return b;
 			}

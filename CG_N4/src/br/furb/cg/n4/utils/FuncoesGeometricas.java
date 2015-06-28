@@ -1,5 +1,6 @@
 package br.furb.cg.n4.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.furb.cg.n4.modelo.Ponto;
@@ -70,6 +71,30 @@ public class FuncoesGeometricas
 		}
 				
 		return null;
+	}
+
+	public static Ponto pontoDeRaioAngulo(double angulo, double raio, double posX, double posY)
+	{
+		double x = (raio * Math.cos(Math.PI * angulo / 180.0)) + posX;
+		double y = (raio * Math.sin(Math.PI * angulo / 180.0)) + posY;
+
+		return new Ponto(x, y);
+	}
+	
+	public static List<Ponto> gerarCirculoDePontos(Ponto posicao, Double raio, int qtdePontos)
+	{
+		List<Ponto> pontos = new ArrayList<Ponto>(qtdePontos);
+		
+		double a = 0;
+
+		for (int i = 0; i < qtdePontos; i++)
+		{
+			a = (360 * i) / qtdePontos;
+
+			pontos.add(pontoDeRaioAngulo(a, raio, posicao.getX(), posicao.getY()));
+		}
+		
+		return pontos;
 	}
 
 }

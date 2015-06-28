@@ -3,10 +3,12 @@ package br.furb.cg.n4.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.furb.cg.n4.utils.FuncoesGeometricas;
+
 public class Circulo extends Forma
 {
-	private static final int QTD_PONTOS_CIRCULO = 360;
-	private static final int RAIO_CIRCULO = 5;
+	private static final double RAIO_CIRCULO = 5;
+	private static final int QTD_PONTOS_CIRCULO = 360;	
 	private static final int X_INICIAL = 0;
 	private static final int Y_INICIAL = 0;
 	
@@ -20,39 +22,16 @@ public class Circulo extends Forma
 	}
 	
 	private void criarVertices()
-	{	
-		double a = 0;
-
-		for (int i = 0; i < QTD_PONTOS_CIRCULO; i++)
-		{
-			a = (360 * i) / QTD_PONTOS_CIRCULO;
-
-			vertices.add(criarPontoCirculo(a, RAIO_CIRCULO, X_INICIAL, Y_INICIAL));
-		}
+	{
+		Ponto posicao = new Ponto(X_INICIAL, Y_INICIAL);
+		
+		vertices.addAll(FuncoesGeometricas.gerarCirculoDePontos(posicao, RAIO_CIRCULO, QTD_PONTOS_CIRCULO));
 	}
 
 	@Override
 	List<Ponto> getVerticesForma()
 	{
 		return vertices;
-	}
-	
-	private double RetornaX(double angulo, double raio)
-	{
-		return (raio * Math.cos(Math.PI * angulo / 180.0));
-	}
-
-	private double RetornaY(double angulo, double raio)
-	{
-		return (raio * Math.sin(Math.PI * angulo / 180.0));
-	}
-
-	private Ponto criarPontoCirculo(double angulo, double raio, double posX, double posY)
-	{
-		double x = RetornaX(angulo, raio) + posX;
-		double y = RetornaY(angulo, raio) + posY;
-
-		return new Ponto(x, y);
 	}
 
 	@Override
