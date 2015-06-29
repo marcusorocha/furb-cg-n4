@@ -51,11 +51,11 @@ public class PecaDupla extends Peca
 		pb1 = new Ponto(-20, 0);		
 		pb2 = new Ponto(+20, 0);
 		
-		b1 = new Bloco(fb1);
+		b1 = new BlocoPeca(fb1);
 		b1.transladar(pb1);
 		b1.escalar(2);
 		
-		b2 = new Bloco(fb2);
+		b2 = new BlocoPeca(fb2);
 		b2.transladar(pb2);
 		b2.escalar(2);
 		

@@ -61,7 +61,11 @@ public class Camera
 	 */
 	public void posicionar(GL gl, GLU glu)
 	{			
-		glu.gluOrtho2D(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY);
+		//glu.gluOrtho2D(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY);
+		
+		float h = (float)getLargura() / (float)getAltura();
+		
+		glu.gluPerspective(60.0f, h, 5.0f, 100.0f);
 	}
 	
 	/**

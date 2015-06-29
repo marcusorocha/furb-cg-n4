@@ -45,6 +45,14 @@ public class AmbienteGrafico extends EventosAdapter
 		glDrawable.setGL(new DebugGL(gl));
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
+		//float pos[] = { 5.0f, 5.0f, 10.0f, 0.0f };
+		
+		//gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
+	    //gl.glEnable(GL.GL_CULL_FACE);
+	    //gl.glEnable(GL.GL_LIGHTING);
+	    //gl.glEnable(GL.GL_LIGHT0);
+	    //gl.glEnable(GL.GL_DEPTH_TEST);
+		
 		mundo = new Mundo();
 		
 		iniciarJogo();
@@ -62,7 +70,7 @@ public class AmbienteGrafico extends EventosAdapter
 
 	public void display(GLAutoDrawable arg0)
 	{
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT);		
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
 		

@@ -56,15 +56,15 @@ public class PecaTripla extends Peca
 		pb2 = new Ponto(+20, +20);
 		pb3 = new Ponto(+20, -20);
 		
-		b1 = new Bloco(fb1);
+		b1 = new BlocoPeca(fb1);
 		b1.transladar(pb1);
 		b1.escalar(2);
 		
-		b2 = new Bloco(fb2);
+		b2 = new BlocoPeca(fb2);
 		b2.transladar(pb2);
 		b2.escalar(2);
 		
-		b3 = new Bloco(fb3);
+		b3 = new BlocoPeca(fb3);
 		b3.transladar(pb3);
 		b3.escalar(2);
 		
