@@ -43,14 +43,17 @@ public class AmbienteGrafico extends EventosAdapter
 		gl = drawable.getGL();
 		glu = new GLU();
 		glDrawable.setGL(new DebugGL(gl));
+		
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
-		//float pos[] = { 5.0f, 5.0f, 10.0f, 0.0f };
+		//gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
-		//gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
+		float pos[] = { 5.0f, 5.0f, 10.0f, 0.0f };
+		
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
 	    //gl.glEnable(GL.GL_CULL_FACE);
-	    //gl.glEnable(GL.GL_LIGHTING);
-	    //gl.glEnable(GL.GL_LIGHT0);
+	    gl.glEnable(GL.GL_LIGHTING);
+	    gl.glEnable(GL.GL_LIGHT0);
 	    //gl.glEnable(GL.GL_DEPTH_TEST);
 		
 		mundo = new Mundo();
@@ -67,21 +70,66 @@ public class AmbienteGrafico extends EventosAdapter
 		mundo.getObjetos().add(mosaico);
 		mundo.getObjetos().addAll(Combinacoes.getPecas());
 	}
-
-	public void display(GLAutoDrawable arg0)
+	
+	@Override
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) 
 	{
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT);		
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
+	    gl.glMatrixMode(GL.GL_PROJECTION);
+	    gl.glLoadIdentity();
+	    
+		gl.glViewport(0, 0, width, height);
+
+//		glu.gluOrtho2D(-30.0f, 30.0f, -30.0f, 30.0f);
+	    glu.gluPerspective(60, width/height, 100, 500);				// projecao Perpectiva 1 pto fuga 3D    
+//		gl.glFrustum (-5.0, 5.0, -5.0, 5.0, 10, 100);				// projecao Perpectiva 1 pto fuga 3D
+//	    gl.glOrtho(-30.0f, 30.0f, -30.0f, 30.0f, -30.0f, 30.0f);	// projecao Ortogonal 3D
+	}
+
+	@Override
+	public void display(GLAutoDrawable drawable)
+	{
+		//gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+		//gl.glMatrixMode(GL.GL_PROJECTION);
+		//gl.glLoadIdentity();
 		
-		mundo.posicionaCamera(gl, glu);
+		//mundo.posicionaCamera(gl, glu);
+		 
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		
+		mundo.posicionaCamera(gl, glu);
+		
+		drawAxis();
+		
 		mundo.desenha(gl, glu);
 
 		gl.glFlush();
+	}
+	
+	public void drawAxis()
+	{
+		// eixo X - Red
+		gl.glColor3f(1.0f, 0.0f, 0.0f);
+		gl.glBegin(GL.GL_LINES);
+			gl.glVertex3f(0.0f, 0.0f, 0.0f);
+			gl.glVertex3f(10.0f, 0.0f, 0.0f);
+		gl.glEnd();
+		
+		// eixo Y - Green
+		gl.glColor3f(0.0f, 1.0f, 0.0f);
+		gl.glBegin(GL.GL_LINES);
+			gl.glVertex3f(0.0f, 0.0f, 0.0f);
+			gl.glVertex3f(0.0f, 10.0f, 0.0f);
+		gl.glEnd();
+		
+		// eixo Z - Blue
+		gl.glColor3f(0.0f, 0.0f, 1.0f);
+		gl.glBegin(GL.GL_LINES);
+			gl.glVertex3f(0.0f, 0.0f, 0.0f);
+			gl.glVertex3f(0.0f, 0.0f, 10.0f);
+		gl.glEnd();
 	}
 
 	@Override

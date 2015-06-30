@@ -15,6 +15,9 @@ public class Camera
 	private double ortho2D_minY;
 	private double ortho2D_maxY;
 	
+	private double xEye = 0.0, yEye = 0.0, zEye = 300.0;
+	private double xCenter, yCenter, zCenter = 0.0;
+	
 	public Camera()
 	{
 		ortho2D_minX = -(LARGURA_PADRAO / 2);
@@ -63,9 +66,9 @@ public class Camera
 	{			
 		//glu.gluOrtho2D(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY);
 		
-		float h = (float)getLargura() / (float)getAltura();
+		//gl.glOrtho(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY, -20, 300);
 		
-		glu.gluPerspective(60.0f, h, 5.0f, 100.0f);
+		glu.gluLookAt(xEye, yEye, zEye, xCenter, yCenter, zCenter, 0.0f, 1.0f, 0.0f);
 	}
 	
 	/**
@@ -99,6 +102,8 @@ public class Camera
 			ortho2D_minY += taxa;
 			ortho2D_maxY -= taxa;
 		}
+		
+		zEye -= taxa;
 	}
 	
 	/**
@@ -132,6 +137,8 @@ public class Camera
 			ortho2D_minY -= taxa;
 			ortho2D_maxY += taxa;
 		}
+		
+		zEye += taxa;
 	}
 	
 	/**
@@ -159,6 +166,8 @@ public class Camera
 	{
 		ortho2D_minX += taxa;
 		ortho2D_maxX += taxa;
+		
+		xEye -= taxa;
 	}
 	
 	/**
@@ -186,6 +195,8 @@ public class Camera
 	{
 		ortho2D_minX -= taxa;
 		ortho2D_maxX -= taxa;
+		
+		xEye += taxa;
 	}
 	
 	/**
@@ -213,6 +224,8 @@ public class Camera
 	{
 		ortho2D_minY -= taxa;
 		ortho2D_maxY -= taxa;
+		
+		yEye += taxa;
 	}
 	
 	/**
@@ -240,6 +253,8 @@ public class Camera
 	{
 		ortho2D_minY += taxa;
 		ortho2D_maxY += taxa;
+		
+		yEye -= taxa;
 	}
 	
 	/**

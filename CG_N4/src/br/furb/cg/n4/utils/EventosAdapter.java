@@ -32,7 +32,7 @@ public class EventosAdapter implements GLEventListener, KeyListener, MouseListen
 	public void init(GLAutoDrawable arg0) { }
 
 	@Override
-	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) { }
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) { }
 
 	@Override
 	public void mouseDragged(MouseEvent e) { }

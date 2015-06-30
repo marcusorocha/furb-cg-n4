@@ -142,7 +142,7 @@ public class Mundo extends ObjetoGrafico
 	@Override
 	void desenhar(GL gl, GLU glu)
 	{
-		desenhaSRU(gl, glu);		
+		//desenhaSRU(gl, glu);
 	}
 
 	@Override
