@@ -109,6 +109,7 @@ public class Combinacoes
 		{
 			Peca peca = pecas.get(i);
 			Ponto posicao = posicoes.get(i);
+			posicao.setZ(10);
 			
 			peca.transladar(posicao);
 		}

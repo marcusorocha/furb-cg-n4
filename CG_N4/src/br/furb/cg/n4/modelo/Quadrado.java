@@ -18,10 +18,10 @@ public class Quadrado extends Forma
 	
 	private void criarVertices()
 	{
-		vertices.add(new Ponto(-RAIO_QUADRADO, +RAIO_QUADRADO));
-		vertices.add(new Ponto(+RAIO_QUADRADO, +RAIO_QUADRADO));
-		vertices.add(new Ponto(+RAIO_QUADRADO, -RAIO_QUADRADO));
 		vertices.add(new Ponto(-RAIO_QUADRADO, -RAIO_QUADRADO));
+		vertices.add(new Ponto(+RAIO_QUADRADO, -RAIO_QUADRADO));
+		vertices.add(new Ponto(+RAIO_QUADRADO, +RAIO_QUADRADO));
+		vertices.add(new Ponto(-RAIO_QUADRADO, +RAIO_QUADRADO));
 	}
 
 	@Override

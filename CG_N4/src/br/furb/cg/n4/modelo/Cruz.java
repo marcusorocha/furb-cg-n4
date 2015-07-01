@@ -29,18 +29,18 @@ public class Cruz extends Forma
 	 */
 	private void criarVertices()
 	{
-		vertices.add(new Ponto(-2.5, +2.5));
-		vertices.add(new Ponto(-2.5, +5.0));
-		vertices.add(new Ponto(+2.5, +5.0));
-		vertices.add(new Ponto(+2.5, +2.5));
-		vertices.add(new Ponto(+5.0, +2.5));
-		vertices.add(new Ponto(+5.0, -2.5));
-		vertices.add(new Ponto(+2.5, -2.5));
-		vertices.add(new Ponto(+2.5, -5.0));
-		vertices.add(new Ponto(-2.5, -5.0));
-		vertices.add(new Ponto(-2.5, -2.5));
-		vertices.add(new Ponto(-5.0, -2.5));
 		vertices.add(new Ponto(-5.0, +2.5));		
+		vertices.add(new Ponto(-5.0, -2.5));
+		vertices.add(new Ponto(-2.5, -2.5));
+		vertices.add(new Ponto(-2.5, -5.0));
+		vertices.add(new Ponto(+2.5, -5.0));
+		vertices.add(new Ponto(+2.5, -2.5));
+		vertices.add(new Ponto(+5.0, -2.5));
+		vertices.add(new Ponto(+5.0, +2.5));
+		vertices.add(new Ponto(+2.5, +2.5));
+		vertices.add(new Ponto(+2.5, +5.0));
+		vertices.add(new Ponto(-2.5, +5.0));
+		vertices.add(new Ponto(-2.5, +2.5));
 	}
 	
 	@Override

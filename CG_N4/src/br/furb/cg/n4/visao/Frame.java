@@ -12,11 +12,11 @@ public class Frame extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	
-	private int janelaLargura  = 600, janelaAltura = 600;
+	private int janelaLargura  = 700, janelaAltura = 700;
 	
 	public Frame() 
 	{		
-		super("CG-N3");
+		super("CG-N4");
 		
 		setBounds(300, 150, janelaLargura, janelaAltura + 22);  // 500 + 22 da borda do título da janela
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

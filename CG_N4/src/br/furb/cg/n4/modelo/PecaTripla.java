@@ -76,6 +76,7 @@ public class PecaTripla extends Peca
 	@Override
 	void desenhar(GL gl, GLU glu)
 	{
+		/*
 		if (isSelecionado())
 			gl.glColor3f(1.0f, 0.0f, 0.0f);
 		else
@@ -87,6 +88,7 @@ public class PecaTripla extends Peca
 				gl.glVertex3d(v.getX(), v.getY(), v.getZ());
 		}
 		gl.glEnd();
+		*/
 	}
 
 	@Override
@@ -153,7 +155,7 @@ public class PecaTripla extends Peca
 			double x = (pb0.getX() + pb2.getX()) / 2;
 			double y = (pb0.getY() + pb2.getY()) / 2;
 			
-			Ponto pEncaixe = new Ponto(x, y);			
+			Ponto pEncaixe = new Ponto(x, y, 0);
 			
 			transladar(pEncaixe, true);
 			
@@ -162,6 +164,8 @@ public class PecaTripla extends Peca
 			blocos[2].setOcupado(true);
 			
 			blocosEncaixados = blocos;
+			
+			setEncaixada(true);
 		}
 	}
 	
@@ -175,6 +179,10 @@ public class PecaTripla extends Peca
 				blocosEncaixados[i].setOcupado(false);
 				blocosEncaixados[i] = null;
 			}
+			
+			setEncaixada(false);
+			
+			transladar(0, 0, 10);
 		}
 	}
 }

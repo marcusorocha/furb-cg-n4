@@ -49,7 +49,7 @@ public class Mosaico extends ObjetoGrafico
 				
 				BlocoMosaico b = new BlocoMosaico(FormaFactory.criarForma(FormaType.values()[formas[h][v]]));
 				
-				b.transladar(xPosBloco, yPosBloco);
+				b.transladar(xPosBloco, yPosBloco, 0);
 				b.escalar(2);
 				 
 				blocos[h][v] = b;

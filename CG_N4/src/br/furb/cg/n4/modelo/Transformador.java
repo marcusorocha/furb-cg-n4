@@ -46,11 +46,11 @@ public class Transformador
 	 * @param x Valor para translação no eixo X
 	 * @param y Valor para translação no eixo Y
 	 */
-	public void transladar(double x, double y, boolean absoluto)
+	public void transladar(double x, double y, double z, boolean absoluto)
 	{	
 		Transformacao translacaoAux = new Transformacao();
 		
-		translacaoAux.MakeTranslation(new Ponto(x, y));
+		translacaoAux.MakeTranslation(new Ponto(x, y, z));
 		
 		if (absoluto)
 			translacao = translacaoAux;
@@ -60,9 +60,9 @@ public class Transformador
 		aplicarTransformacao();
 	}
 	
-	public void transladar(double x, double y)
+	public void transladar(double x, double y, double z)
 	{
-		transladar(x, y, false);
+		transladar(x, y, z, false);
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public class Transformador
 			
 		matrizGlobal = matrizPontoFixo.transformMatrix(matrizGlobal);					
 		matrizGlobal = escala.transformMatrix(matrizGlobal);
-		matrizGlobal = rotacao.transformMatrix(matrizGlobal);		
+		matrizGlobal = rotacao.transformMatrix(matrizGlobal);
 		matrizGlobal = translacao.transformMatrix(matrizGlobal);
 		
 		objeto.getMatrizObjeto().setData(matrizGlobal.getData());

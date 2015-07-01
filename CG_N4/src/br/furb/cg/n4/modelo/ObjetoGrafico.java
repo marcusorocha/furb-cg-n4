@@ -13,8 +13,8 @@ public abstract class ObjetoGrafico
 	private Transformador transformador;	
 	private List<ObjetoGrafico> objetos;
 	
-	private boolean selecionado;
-	private boolean iluminacao;
+	private boolean selecionado = false;
+	private boolean iluminacao = false;
 	
 	public ObjetoGrafico()
 	{
@@ -36,7 +36,7 @@ public abstract class ObjetoGrafico
 		gl.glPushMatrix();
 		{
 			gl.glMultMatrixd(matrizObjeto.getData(), 0);
-			{
+			{				
 				for (ObjetoGrafico f : getObjetos())
 					f.desenha(gl, glu);
 				
@@ -45,7 +45,8 @@ public abstract class ObjetoGrafico
 				
 				desenhar(gl, glu);
 				
-				gl.glDisable(GL.GL_LIGHTING);
+				if (isIluminacao())
+					gl.glDisable(GL.GL_LIGHTING);
 			}
 		}
 		gl.glPopMatrix();
@@ -66,24 +67,24 @@ public abstract class ObjetoGrafico
 		transformador.escalar(proporcao);
 	}
 	
-	public void transladar(double x, double y)
+	public void transladar(double x, double y, double z)
 	{
-		transformador.transladar(x, y);
+		transformador.transladar(x, y, z);
 	}
 	
-	public void transladar(double x, double y, boolean absoluto)
+	public void transladar(double x, double y, double z, boolean absoluto)
 	{
-		transformador.transladar(x, y, absoluto);
+		transformador.transladar(x, y, z, absoluto);
 	}
 	
 	public void transladar(Ponto p)
 	{
-		transladar(p.getX(), p.getY());
+		transladar(p.getX(), p.getY(), p.getZ());
 	}
 	
 	public void transladar(Ponto p, boolean absoluto)
 	{
-		transladar(p.getX(), p.getY(), absoluto);
+		transladar(p.getX(), p.getY(), p.getZ(), absoluto);
 	}
 	
 	public void rotacionar(double graus)

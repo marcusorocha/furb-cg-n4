@@ -30,13 +30,13 @@ public class AmbienteGrafico extends EventosAdapter
 
 	private Mundo mundo;
 	private Mosaico mosaico;
-	private ObjetoGrafico selecionado;
+	private Peca selecionada;
 	private Ponto pontoSelecao;
 	private boolean girarSelecionado = false;
 	
 	public AmbienteGrafico(Component owner)
 	{
-		selecionado = null;
+		selecionada = null;
 	}
 
 	public void init(GLAutoDrawable drawable)
@@ -46,17 +46,17 @@ public class AmbienteGrafico extends EventosAdapter
 		glu = new GLU();
 		glDrawable.setGL(new DebugGL(gl));
 		
-		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		//gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
-		//gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
-		float pos[] = { 5.0f, 5.0f, 10.0f, 0.0f };
+		float pos[] = { 10.0f, 10.0f, 10.0f, 0.0f };
 		
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
-	    //gl.glEnable(GL.GL_CULL_FACE);
-	    //gl.glEnable(GL.GL_LIGHTING);
-	    gl.glEnable(GL.GL_LIGHT0);
-	    //gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glEnable(GL.GL_LIGHT0);
+		
+		//gl.glEnable(GL.GL_CULL_FACE);
+	    gl.glEnable(GL.GL_DEPTH_TEST);
 		
 		mundo = new Mundo();
 		
@@ -83,7 +83,7 @@ public class AmbienteGrafico extends EventosAdapter
 		    
 			gl.glViewport(0, 0, width, height);
 
-		    glu.gluPerspective(60, width/height, 100, 1000); // projecao Perpectiva 1 pto fuga 3D
+		    glu.gluPerspective(80, width/height, 100, 1000); // projecao Perpectiva 1 pto fuga 3D
 		}
 	}
 
@@ -131,55 +131,59 @@ public class AmbienteGrafico extends EventosAdapter
 		
 		ObjetoGrafico selecao = mundo.localizarObjeto(p);
 		
-		if (selecionado != null)
-			if (!selecionado.equals(selecao))
-				selecionado.setSelecionado(false);
-				
-		girarSelecionado = (selecao != null && selecao == selecionado);
+		if (selecao instanceof Peca)
+		{
 		
-		selecionado = selecao;
-		
-		if (selecionado != null)
-		{			
-			selecionado.setSelecionado(true);
-			pontoSelecao = p;
+			if (selecionada != null)
+				if (!selecionada.equals(selecao))
+					selecionada.setSelecionado(false);
+					
+			girarSelecionado = (selecao != null && selecao == selecionada);
 			
-		}
+			selecionada = (Peca)selecao;
+			
+			if (selecionada != null)
+			{			
+				selecionada.setSelecionado(true);
+				pontoSelecao = p;
+				
+			}
 		
-		redesenhar();
+			redesenhar();
+		}
 	}
 	
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{
-		if (selecionado != null)
+		if (selecionada != null)
 		{
-			if (selecionado instanceof Peca)
+			
+			boolean encaixa = selecionada.verificaEncaixe(mosaico);
+			
+			if (encaixa)
 			{
-				boolean encaixa = ((Peca)selecionado).verificaEncaixe(mosaico);
-				
-				if (encaixa)
+				selecionada.encaixar(mosaico);
+				selecionada.setSelecionado(false);
+				selecionada = null;
+			}
+			else
+			{
+				if (girarSelecionado && !selecionada.isEncaixada())
 				{
-					((Peca)selecionado).encaixar(mosaico);
+					selecionada.rotacionar(90);
+					
+					girarSelecionado = false;
 				}
-				else
-				{
-					if (girarSelecionado)
-					{
-						selecionado.rotacionar(90);
-						
-						girarSelecionado = false;
-					}
-				}
-				
+			}			
+			
+			redesenhar();
+			
+			if (mosaico.todosBlocosEstaoOcupados())
+			{
+				JOptionPane.showMessageDialog(null, "Fim de jogo");
+				iniciarJogo();
 				redesenhar();
-				
-				if (mosaico.todosBlocosEstaoOcupados())
-				{
-					JOptionPane.showMessageDialog(null, "Fim de jogo");
-					iniciarJogo();
-					redesenhar();
-				}
 			}
 		}
 	}
@@ -187,7 +191,7 @@ public class AmbienteGrafico extends EventosAdapter
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
-		if (selecionado != null)
+		if (selecionada != null)
 		{	
 			girarSelecionado = false;
 			
@@ -196,14 +200,12 @@ public class AmbienteGrafico extends EventosAdapter
 			double translacaoX = p.getX() - pontoSelecao.getX();
 			double translacaoY = p.getY() - pontoSelecao.getY();
 			
-			selecionado.transladar(translacaoX, translacaoY);
+			selecionada.transladar(translacaoX, translacaoY, 0);
 			
 			pontoSelecao = p;
 			
-			if (selecionado instanceof Peca)
-			{
-				((Peca) selecionado).desencaixar(mosaico);
-			}
+			if (selecionada.isEncaixada())
+				selecionada.desencaixar(mosaico);
 			
 			redesenhar();
 		}
@@ -290,49 +292,49 @@ public class AmbienteGrafico extends EventosAdapter
 			default : break;
 		}
 		
-		if (selecionado != null)
+		if (selecionada != null)
 		{
 			switch (operacao)
 			{
 				case CANCELAR :							
-					selecionado.setSelecionado(false);
-					selecionado = null;
+					selecionada.setSelecionado(false);
+					selecionada = null;
 					break;					
 
 				case AMPLIAR :
-					selecionado.escalar(2.0);
+					selecionada.escalar(2.0);
 					break;
 				
 				case REDUZIR :
-					selecionado.escalar(0.5);
+					selecionada.escalar(0.5);
 					break;
 				
 				case MOVER_DIREITA :
-					selecionado.transladar(+5, 0);
+					selecionada.transladar(+5, 0, 0);
 					break;
 				
 				case MOVER_ESQUERDA :
-					selecionado.transladar(-5, 0);
+					selecionada.transladar(-5, 0, 0);
 					break;
 				
 				case MOVER_ACIMA :
-					selecionado.transladar(0, +5);
+					selecionada.transladar(0, +5, 0);
 					break;
 				
 				case MOVER_ABAIXO :
-					selecionado.transladar(0, -5);
+					selecionada.transladar(0, -5, 0);
 					break;
 				
 				case GIRAR_DIREITA :
-					selecionado.rotacionar(90);
+					selecionada.rotacionar(90);
 					break;
 				
 				case GIRAR_ESQUERDA :						
-					selecionado.rotacionar(90);
+					selecionada.rotacionar(90);
 					break;
 				
 				case IMPRIMIR_MATRIZ :						
-					selecionado.exibeMatrizTransformacao();
+					selecionada.exibeMatrizTransformacao();
 					break;
 				
 				default : break;

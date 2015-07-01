@@ -66,6 +66,7 @@ public class PecaDupla extends Peca
 	@Override
 	void desenhar(GL gl, GLU glu)
 	{
+		/*
 		if (isSelecionado())
 			gl.glColor3f(1.0f, 0.0f, 0.0f);
 		else
@@ -77,6 +78,7 @@ public class PecaDupla extends Peca
 				gl.glVertex3d(v.getX(), v.getY(), v.getZ());
 		}
 		gl.glEnd();
+		*/
 	}
 
 	@Override
@@ -146,6 +148,8 @@ public class PecaDupla extends Peca
 			blocos[1].setOcupado(true);
 			
 			blocosEncaixados = blocos;
+			
+			setEncaixada(true);
 		}
 	}
 	
@@ -159,6 +163,10 @@ public class PecaDupla extends Peca
 				blocosEncaixados[i].setOcupado(false);
 				blocosEncaixados[i] = null;
 			}
+			
+			setEncaixada(false);
+			
+			transladar(0, 0, 10);
 		}
 	}
 
