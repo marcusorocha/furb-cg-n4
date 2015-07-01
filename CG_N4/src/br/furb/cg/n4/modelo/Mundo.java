@@ -9,6 +9,7 @@ public class Mundo extends ObjetoGrafico
 {
 	private float sruX = 150;
 	private float sruY = 150;
+	private float sruZ = 150;
 	
 	private Camera camera;
 	
@@ -31,9 +32,9 @@ public class Mundo extends ObjetoGrafico
 	 * @param gl
 	 * @param glu
 	 */
-	public void posicionaCamera(GL gl, GLU glu)
+	public void posicionaCamera(GL gl, GLU glu, boolean ambiente3D)
 	{
-		camera.posicionar(gl, glu);
+		camera.posicionar(gl, glu, ambiente3D);
 	}
 	
 	/**
@@ -41,25 +42,34 @@ public class Mundo extends ObjetoGrafico
 	 * @param gl
 	 * @param glu
 	 */
-	private void desenhaSRU(GL gl, GLU glu)
+	public void desenhaSRU(GL gl, GLU glu)
 	{
 		gl.glLineWidth(1.0f);
 
-		// Eixo X
+		// Eixo X - Vermelho
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
 		gl.glBegin(GL.GL_LINES);
 		{
-			gl.glVertex2d(-sruX, 0.0);
-			gl.glVertex2d(+sruX, 0.0);
+			gl.glVertex3f(-sruX, 0.0f, 0.0f);
+			gl.glVertex3f(+sruX, 0.0f, 0.0f);
 		}
 		gl.glEnd();
 
-		// Eixo Y
+		// Eixo Y - Verde
+		gl.glColor3f(0.0f, 1.0f, 0.0f);
+		gl.glBegin(GL.GL_LINES);
+		{
+			gl.glVertex3d(0.0, -sruY, 0.0f);
+			gl.glVertex3d(0.0, +sruY, 0.0f);
+		}
+		gl.glEnd();
+		
+		// Eixo Z - Azul
 		gl.glColor3f(0.0f, 0.0f, 1.0f);
 		gl.glBegin(GL.GL_LINES);
 		{
-			gl.glVertex2d(0.0, -sruY);
-			gl.glVertex2d(0.0, +sruY);
+			gl.glVertex3f(0.0f, 0.0f, -sruZ);
+			gl.glVertex3f(0.0f, 0.0f, +sruZ);
 		}
 		gl.glEnd();
 	}

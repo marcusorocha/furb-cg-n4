@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.furb.cg.n4.modelo.Ponto;
+import br.furb.cg.n4.modelo.Reta;
 
 public class FuncoesGeometricas
 {	
@@ -95,6 +96,74 @@ public class FuncoesGeometricas
 		}
 		
 		return pontos;
+	}
+	
+	/**
+	 * Calcula a interseccao entre 2 retas no plano 2D ("XY" Z = 0)
+	 * 
+	 * @param k Ponto inicial da reta 1
+	 * @param l Ponto final da reta 1
+	 * @param m Ponto inicial da reta 2
+	 * @param n Ponto final da reta 2
+	 * 
+	 * @return Ponto de intersecção entre as 2 retas
+	 */
+	public static Ponto interseccao(Ponto k, Ponto l, Ponto m, Ponto n)
+	{
+		double det;
+
+		det = (n.getX() - m.getY()) * (l.getY() - k.getY())  -  (n.getY() - m.getY()) * (l.getX() - k.getX());
+
+		if (det == 0.0)
+			return null; // não há intersecção
+
+		double x = ((n.getX() - m.getX()) * (m.getY() - k.getY()) - (n.getY() - m.getY()) * (m.getX() - k.getX())) / det ;
+		double y = ((l.getX() - k.getX()) * (m.getY() - k.getY()) - (l.getY() - k.getY()) * (m.getX() - k.getX())) / det ;
+
+		return new Ponto(x, y); // há intersecção
+	}
+	
+	/**
+	 * Calcula a interseccao entre 2 retas no plano 2D ("XY" Z = 0)
+	 * 
+	 * @param r1 Reta 1 contendo os pontos A e B
+	 * @param r2 Reta 2 contendo os pontos A e B 
+	 * 
+	 * @return Ponto de intersecção entre as 2 retas
+	 */	
+	public static Ponto interseccao(Reta r1, Reta r2)
+	{
+		return interseccao(r1.getPontoA(), r1.getPontoB(), r2.getPontoA(), r2.getPontoB());
+	}
+	
+	public static double distanciaEuclidiana(Ponto a, Ponto b)
+	{
+		double xAB = b.getX() - a.getX();
+		double yAB = b.getY() - a.getY();
+		
+		xAB = xAB * xAB;
+		yAB = yAB * yAB;
+		
+		return Math.sqrt(xAB + yAB);
+	}
+	
+	public static Ponto pontoMaisProximo(List<Ponto> pontos, Ponto b)
+	{
+		double min = Integer.MAX_VALUE;
+		double dis;
+		Ponto p = null;
+		
+		for (Ponto a : pontos)
+		{
+			dis = distanciaEuclidiana(a, b);
+			if (min > dis)
+			{
+				min = dis;
+				p = a;
+			}
+		}
+		
+		return p;
 	}
 
 }

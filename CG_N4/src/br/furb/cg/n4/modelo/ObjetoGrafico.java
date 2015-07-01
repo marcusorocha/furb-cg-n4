@@ -14,6 +14,7 @@ public abstract class ObjetoGrafico
 	private List<ObjetoGrafico> objetos;
 	
 	private boolean selecionado;
+	private boolean iluminacao;
 	
 	public ObjetoGrafico()
 	{
@@ -36,10 +37,15 @@ public abstract class ObjetoGrafico
 		{
 			gl.glMultMatrixd(matrizObjeto.getData(), 0);
 			{
-				desenhar(gl, glu);
-				
 				for (ObjetoGrafico f : getObjetos())
 					f.desenha(gl, glu);
+				
+				if (isIluminacao())
+					gl.glEnable(GL.GL_LIGHTING);
+				
+				desenhar(gl, glu);
+				
+				gl.glDisable(GL.GL_LIGHTING);
 			}
 		}
 		gl.glPopMatrix();
@@ -106,5 +112,15 @@ public abstract class ObjetoGrafico
 	public void setSelecionado(boolean selecionado)
 	{
 		this.selecionado = selecionado;
+	}
+
+	public boolean isIluminacao() 
+	{
+		return iluminacao;
+	}
+
+	public void setIluminacao(boolean iluminacao) 
+	{
+		this.iluminacao = iluminacao;
 	}
 }

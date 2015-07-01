@@ -60,10 +60,10 @@ public abstract class Bloco extends ObjetoGrafico
 	@Override
 	void desenhar(GL gl, GLU glu)
 	{	
-		gl.glColor3f(0.0f, 0.0f, 0.0f);
-		
 		gl.glBegin(GL.GL_LINE_LOOP);
 		{
+			gl.glColor3f(0.0f, 0.0f, 0.0f);
+			
 			for (Ponto v : forma.getVerticesForma())
 				gl.glVertex3d(v.getX(), v.getY(), v.getZ());
 		}

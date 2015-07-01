@@ -22,6 +22,8 @@ import br.furb.cg.n4.utils.EventosAdapter;
 
 public class AmbienteGrafico extends EventosAdapter
 {
+	private final boolean AMBIENTE_3D = true;
+	
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
@@ -52,7 +54,7 @@ public class AmbienteGrafico extends EventosAdapter
 		
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
 	    //gl.glEnable(GL.GL_CULL_FACE);
-	    gl.glEnable(GL.GL_LIGHTING);
+	    //gl.glEnable(GL.GL_LIGHTING);
 	    gl.glEnable(GL.GL_LIGHT0);
 	    //gl.glEnable(GL.GL_DEPTH_TEST);
 		
@@ -74,62 +76,44 @@ public class AmbienteGrafico extends EventosAdapter
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) 
 	{
-	    gl.glMatrixMode(GL.GL_PROJECTION);
-	    gl.glLoadIdentity();
-	    
-		gl.glViewport(0, 0, width, height);
+		if (AMBIENTE_3D)
+		{		
+			gl.glMatrixMode(GL.GL_PROJECTION);
+		    gl.glLoadIdentity();
+		    
+			gl.glViewport(0, 0, width, height);
 
-//		glu.gluOrtho2D(-30.0f, 30.0f, -30.0f, 30.0f);
-	    glu.gluPerspective(60, width/height, 100, 500);				// projecao Perpectiva 1 pto fuga 3D    
-//		gl.glFrustum (-5.0, 5.0, -5.0, 5.0, 10, 100);				// projecao Perpectiva 1 pto fuga 3D
-//	    gl.glOrtho(-30.0f, 30.0f, -30.0f, 30.0f, -30.0f, 30.0f);	// projecao Ortogonal 3D
+		    glu.gluPerspective(60, width/height, 100, 1000); // projecao Perpectiva 1 pto fuga 3D
+		}
 	}
 
 	@Override
 	public void display(GLAutoDrawable drawable)
 	{
-		//gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-		//gl.glMatrixMode(GL.GL_PROJECTION);
-		//gl.glLoadIdentity();
-		
-		//mundo.posicionaCamera(gl, glu);
-		 
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		if (!AMBIENTE_3D)
+		{
+			gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+			gl.glMatrixMode(GL.GL_PROJECTION);
+			gl.glLoadIdentity();
+			
+			mundo.posicionaCamera(gl, glu, AMBIENTE_3D);
+		}
+		else
+		{
+			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		}
 		
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		
-		mundo.posicionaCamera(gl, glu);
-		
-		drawAxis();
+		if (AMBIENTE_3D)
+			mundo.posicionaCamera(gl, glu, AMBIENTE_3D);
+			
+		mundo.desenhaSRU(gl, glu);
 		
 		mundo.desenha(gl, glu);
 
 		gl.glFlush();
-	}
-	
-	public void drawAxis()
-	{
-		// eixo X - Red
-		gl.glColor3f(1.0f, 0.0f, 0.0f);
-		gl.glBegin(GL.GL_LINES);
-			gl.glVertex3f(0.0f, 0.0f, 0.0f);
-			gl.glVertex3f(10.0f, 0.0f, 0.0f);
-		gl.glEnd();
-		
-		// eixo Y - Green
-		gl.glColor3f(0.0f, 1.0f, 0.0f);
-		gl.glBegin(GL.GL_LINES);
-			gl.glVertex3f(0.0f, 0.0f, 0.0f);
-			gl.glVertex3f(0.0f, 10.0f, 0.0f);
-		gl.glEnd();
-		
-		// eixo Z - Blue
-		gl.glColor3f(0.0f, 0.0f, 1.0f);
-		gl.glBegin(GL.GL_LINES);
-			gl.glVertex3f(0.0f, 0.0f, 0.0f);
-			gl.glVertex3f(0.0f, 0.0f, 10.0f);
-		gl.glEnd();
 	}
 
 	@Override
@@ -311,7 +295,7 @@ public class AmbienteGrafico extends EventosAdapter
 			switch (operacao)
 			{
 				case CANCELAR :							
-					//selecionado.limparSelecao();
+					selecionado.setSelecionado(false);
 					selecionado = null;
 					break;					
 
@@ -349,10 +333,6 @@ public class AmbienteGrafico extends EventosAdapter
 				
 				case IMPRIMIR_MATRIZ :						
 					selecionado.exibeMatrizTransformacao();
-					break;
-				
-				case IMPRIMIR_VERTICES :
-					//selecionado.exibeVertices();
 					break;
 				
 				default : break;

@@ -62,13 +62,13 @@ public class Camera
 	 * 
 	 * @see javax.media.opengl.glu.GLU#gluOrtho2D(double, double, double, double)
 	 */
-	public void posicionar(GL gl, GLU glu)
+	public void posicionar(GL gl, GLU glu, boolean ambiente3D)
 	{			
-		//glu.gluOrtho2D(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY);
-		
-		//gl.glOrtho(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY, -20, 300);
-		
-		glu.gluLookAt(xEye, yEye, zEye, xCenter, yCenter, zCenter, 0.0f, 1.0f, 0.0f);
+		if (ambiente3D)
+			//gl.glOrtho(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY, -20, 300);			
+			glu.gluLookAt(xEye, yEye, zEye, xCenter, yCenter, zCenter, 0.0f, 1.0f, 0.0f);
+		else
+			glu.gluOrtho2D(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY);
 	}
 	
 	/**
