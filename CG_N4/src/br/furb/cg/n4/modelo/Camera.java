@@ -15,23 +15,12 @@ public class Camera
 	private double ortho2D_minY;
 	private double ortho2D_maxY;
 	
-	private double xEye = 0.0, yEye = 0.0, zEye = 300.0;
-	private double xCenter, yCenter, zCenter = 0.0;
+	private double xEye, yEye, zEye;
+	private double xCenter, yCenter, zCenter;
 	
 	public Camera()
 	{
-		ortho2D_minX = -(LARGURA_PADRAO / 2);
-		ortho2D_maxX = +(LARGURA_PADRAO / 2);
-		ortho2D_minY = -(ALTURA_PADRAO / 2);
-		ortho2D_maxY = +(ALTURA_PADRAO / 2);
-	}
-	
-	public Camera(double largura, double altura)
-	{
-		ortho2D_minX = -(largura / 2);
-		ortho2D_maxX = +(largura / 2);
-		ortho2D_minY = -(altura / 2);
-		ortho2D_maxY = +(altura / 2);
+		reinicializar();
 	}
 	
 	/**
@@ -65,7 +54,6 @@ public class Camera
 	public void posicionar(GL gl, GLU glu, boolean ambiente3D)
 	{			
 		if (ambiente3D)
-			//gl.glOrtho(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY, -20, 300);			
 			glu.gluLookAt(xEye, yEye, zEye, xCenter, yCenter, zCenter, 0.0f, 1.0f, 0.0f);
 		else
 			glu.gluOrtho2D(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY);
@@ -101,9 +89,9 @@ public class Camera
 			ortho2D_maxX -= taxa;
 			ortho2D_minY += taxa;
 			ortho2D_maxY -= taxa;
-		}
-		
-		zEye -= taxa;
+			
+			zEye -= taxa;
+		}		
 	}
 	
 	/**
@@ -136,9 +124,9 @@ public class Camera
 			ortho2D_maxX += taxa;
 			ortho2D_minY -= taxa;
 			ortho2D_maxY += taxa;
-		}
-		
-		zEye += taxa;
+			
+			zEye += taxa;
+		}		
 	}
 	
 	/**
@@ -280,6 +268,21 @@ public class Camera
 		double y = -((yPonto * escalaY) - ortho2D_maxY);
 		
 		return new Ponto(x, y);
+	}
+	
+	public void reinicializar()
+	{
+		ortho2D_minX = -(LARGURA_PADRAO / 2);
+		ortho2D_maxX = +(LARGURA_PADRAO / 2);
+		ortho2D_minY = -(ALTURA_PADRAO / 2);
+		ortho2D_maxY = +(ALTURA_PADRAO / 2);	
+		
+		xEye = 0.0;
+		yEye = 0.0;
+		zEye = 250.0;
+		xCenter = 0.0;
+		yCenter = 0.0;
+		zCenter = 0.0;
 	}
 	
 	public void exibirOrthos()

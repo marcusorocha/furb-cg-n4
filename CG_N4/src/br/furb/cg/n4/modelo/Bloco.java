@@ -3,9 +3,6 @@ package br.furb.cg.n4.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.glu.GLU;
-
 public abstract class Bloco extends ObjetoGrafico
 {
 	/**
@@ -57,19 +54,6 @@ public abstract class Bloco extends ObjetoGrafico
 		return borda;
 	}
 	
-	@Override
-	void desenhar(GL gl, GLU glu)
-	{	
-		gl.glBegin(GL.GL_LINE_LOOP);
-		{
-			gl.glColor3f(0.0f, 0.0f, 0.0f);
-			
-			for (Ponto v : forma.getVerticesForma())
-				gl.glVertex3d(v.getX(), v.getY(), v.getZ());
-		}
-		gl.glEnd();
-	}
-
 	@Override
 	boolean isSelecionavel()
 	{

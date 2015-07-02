@@ -38,14 +38,14 @@ public class BlocoMosaico extends Bloco
 		float corforma[] = { 0.95f, 0.95f, 0.95f, 1.0f };
 		
 		// Desenha o fundo do bloco
-		gl.glBegin (GL.GL_QUADS );
+		gl.glBegin( GL.GL_QUADS );
 		{
-			gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE, corfundo, 0);
-			
 			gl.glNormal3f(0, 0, 1);
 			
+			gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE, corfundo, 0);
+			
 			for (Ponto p : getVerticesBorda())			
-				gl.glVertex3d(p.getX(), p.getY(),  0);			
+				gl.glVertex3d(p.getX(), p.getY(),  0);
 		}
 		gl.glEnd();
 		

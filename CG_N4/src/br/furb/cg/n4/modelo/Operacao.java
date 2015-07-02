@@ -21,12 +21,11 @@ public enum Operacao
 	MOVER_CAMERA_DIRETA,
 	MOVER_CAMERA_ABAIXO,
 	MOVER_CAMERA_ACIMA,
+	VISAO_DE_JOGO,
 	
 	// Genérico
-	DESENHAR,
 	CANCELAR,
-	REMOVER,
-	COLORIR,
+	MODO_TELA_CHEIA,	
 	
 	IMPRIMIR_VERTICES,
 	IMPRIMIR_MATRIZ,
@@ -36,14 +35,20 @@ public enum Operacao
 	
 	public static Operacao getOperacaoDeTeclado(KeyEvent e)
 	{
-		if (e.isShiftDown())
+		if (e.isControlDown())
+		{
+			switch(e.getKeyCode())
+			{
+				case KeyEvent.VK_ENTER : return MODO_TELA_CHEIA;
+				case KeyEvent.VK_SPACE : return VISAO_DE_JOGO;
+			}
+		}
+		else if (e.isShiftDown())
 		{
 			switch(e.getKeyCode())
 			{				
 				case KeyEvent.VK_LEFT  : return GIRAR_ESQUERDA;
-				case KeyEvent.VK_RIGHT : return GIRAR_DIREITA;
-				case KeyEvent.VK_D     : return DESENHAR;
-				case KeyEvent.VK_C     : return COLORIR;
+				case KeyEvent.VK_RIGHT : return GIRAR_DIREITA;	
 			}
 		}
 		else
@@ -58,15 +63,7 @@ public enum Operacao
 				case KeyEvent.VK_C: return MOVER_CAMERA_ACIMA;
 				case KeyEvent.VK_M: return IMPRIMIR_MATRIZ;
 				case KeyEvent.VK_V: return IMPRIMIR_VERTICES;					
-				//case KeyEvent.VK_PAGE_DOWN : return REDUZIR;
-				//case KeyEvent.VK_PAGE_UP : return AMPLIAR;					
-				//case KeyEvent.VK_LEFT : return MOVER_ESQUERDA;							
-				//case KeyEvent.VK_RIGHT : return MOVER_DIREITA;					
-				//case KeyEvent.VK_UP : return MOVER_ACIMA;
-				//case KeyEvent.VK_DOWN : return MOVER_ABAIXO;					
 				case KeyEvent.VK_ESCAPE : return CANCELAR;
-				case KeyEvent.VK_BACK_SPACE :
-				case KeyEvent.VK_DELETE : return REMOVER;
 			}
 		}
 		

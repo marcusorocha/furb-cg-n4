@@ -1,6 +1,5 @@
 package br.furb.cg.n4.controle;
 
-import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -19,6 +18,7 @@ import br.furb.cg.n4.modelo.Peca;
 import br.furb.cg.n4.modelo.Ponto;
 import br.furb.cg.n4.utils.Combinacoes;
 import br.furb.cg.n4.utils.EventosAdapter;
+import br.furb.cg.n4.visao.Frame;
 
 public class AmbienteGrafico extends EventosAdapter
 {
@@ -27,15 +27,16 @@ public class AmbienteGrafico extends EventosAdapter
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
-
+	private Frame frame;
 	private Mundo mundo;
 	private Mosaico mosaico;
 	private Peca selecionada;
 	private Ponto pontoSelecao;
 	private boolean girarSelecionado = false;
 	
-	public AmbienteGrafico(Component owner)
+	public AmbienteGrafico(Frame frame)
 	{
+		this.frame = frame;
 		selecionada = null;
 	}
 
@@ -77,13 +78,15 @@ public class AmbienteGrafico extends EventosAdapter
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) 
 	{
 		if (AMBIENTE_3D)
-		{		
+		{			
 			gl.glMatrixMode(GL.GL_PROJECTION);
 		    gl.glLoadIdentity();
 		    
 			gl.glViewport(0, 0, width, height);
+		    
+		    double proporcao = (double)width / (double)height;
 
-		    glu.gluPerspective(80, width/height, 100, 1000); // projecao Perpectiva 1 pto fuga 3D
+		    glu.gluPerspective(80, proporcao, 100, 1000); // projecao Perpectiva 1 pto fuga 3D
 		}
 	}
 
@@ -126,31 +129,27 @@ public class AmbienteGrafico extends EventosAdapter
 
 	@Override
 	public void mousePressed(MouseEvent e)
-	{	
+	{					
 		Ponto p = getPontoDeEventoMouse(e);
 		
 		ObjetoGrafico selecao = mundo.localizarObjeto(p);
 		
-		if (selecao instanceof Peca)
-		{
-		
-			if (selecionada != null)
-				if (!selecionada.equals(selecao))
-					selecionada.setSelecionado(false);
-					
-			girarSelecionado = (selecao != null && selecao == selecionada);
-			
-			selecionada = (Peca)selecao;
-			
-			if (selecionada != null)
-			{			
-				selecionada.setSelecionado(true);
-				pontoSelecao = p;
+		if (selecionada != null)
+			if (!selecionada.equals(selecao))
+				selecionada.setSelecionado(false);
 				
-			}
+		girarSelecionado = (selecao != null && selecao == selecionada);
+					
+		selecionada = (selecao instanceof Peca) ? (Peca)selecao : null;
 		
-			redesenhar();
+		if (selecionada != null)
+		{			
+			selecionada.setSelecionado(true);
+			pontoSelecao = p;
+			
 		}
+	
+		redesenhar();
 	}
 	
 	@Override
@@ -288,6 +287,18 @@ public class AmbienteGrafico extends EventosAdapter
 			case MOVER_CAMERA_ABAIXO :
 				mundo.getCamera().abaixo();
 				break;
+				
+			case MODO_TELA_CHEIA :
+				frame.setFullscreen(true);
+				break;
+			
+			case CANCELAR :
+				frame.setFullscreen(false);
+				break;
+				
+			case VISAO_DE_JOGO :
+				mundo.getCamera().reinicializar();
+				break;
 			
 			default : break;
 		}
@@ -296,11 +307,11 @@ public class AmbienteGrafico extends EventosAdapter
 		{
 			switch (operacao)
 			{
-				case CANCELAR :							
+				case CANCELAR :
 					selecionada.setSelecionado(false);
 					selecionada = null;
-					break;					
-
+					break;	
+				
 				case AMPLIAR :
 					selecionada.escalar(2.0);
 					break;
@@ -336,6 +347,8 @@ public class AmbienteGrafico extends EventosAdapter
 				case IMPRIMIR_MATRIZ :						
 					selecionada.exibeMatrizTransformacao();
 					break;
+					
+				
 				
 				default : break;
 			}

@@ -1,6 +1,7 @@
 package br.furb.cg.n4.visao;
 
 import java.awt.BorderLayout;
+import java.awt.GraphicsEnvironment;
 
 import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
@@ -12,13 +13,17 @@ public class Frame extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	
-	private int janelaLargura  = 700, janelaAltura = 700;
+	private int janelaLargura = 800; 
+	private int janelaAltura = 600;
+	private boolean fullscreen = false;	
+	
+	private GLCanvas canvas;
 	
 	public Frame() 
 	{		
 		super("CG-N4");
 		
-		setBounds(300, 150, janelaLargura, janelaAltura + 22);  // 500 + 22 da borda do título da janela
+		setBounds(300, 150, janelaLargura, janelaAltura + 22);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 		setResizable(false);
@@ -37,7 +42,7 @@ public class Frame extends JFrame
 		/* Cria um canvas, adiciona ao frame e objeto "ouvinte" 
 		 * para os eventos Gl, de mouse e teclado
 		 */
-		GLCanvas canvas = new GLCanvas(glCaps);
+		canvas = new GLCanvas(glCaps);
 		canvas.addGLEventListener(renderer);
 		canvas.addKeyListener(renderer);
 		canvas.addMouseListener(renderer);
@@ -45,11 +50,31 @@ public class Frame extends JFrame
 		canvas.addMouseWheelListener(renderer);
 		
 		add(canvas, BorderLayout.CENTER);
-	}	
+	}
+	
+	public void init(boolean bFullScreen) 
+	{
+	    fullscreen = bFullScreen;
+	    setUndecorated(bFullScreen);
+	    setVisible(true);
+	    GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(bFullScreen ? this : null);
+	    canvas.requestFocus();
+	}
+	
+	public void setFullscreen(boolean bFullscreen) 
+	{
+	    if (fullscreen != bFullscreen) 
+	    {
+	        this.dispose();
+	        init(bFullscreen);
+	    }
+	}
 	
 	public static void main(String[] args) 
 	{
-		new Frame().setVisible(true);
+		new Frame().init(false);
 	}
+	
+	
 	
 }
